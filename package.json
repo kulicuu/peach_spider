@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "async": "latest",
+        "bluebird": "latest",
+        "ioredis": "latest",
+        "jsdom": "latest",
+        "lodash": "latest",
+        "mocha": "latest",
+        "mongodb": "latest",
+        "node-uuid": "latest",
+        "request": "latest",
+        "shortid": "latest"
+    }
+}
