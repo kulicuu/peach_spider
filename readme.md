@@ -10,6 +10,14 @@ Focus here is on creating an efficient development environment, in particular fo
 
 Another priority is testing coverage.  We expect sites to evolve and data to mutate quickly; if we expect to serve a client whose enterprise is dependent on the accuracy, timeliness of the data we'll need to be able to run tests at various levels quickly and easily.  
 
+### Quickstart
+_development_
+- clone and `npm install`
+- start a Redis server.
+- `coffee dev_main_.coffee`
+
+Now when you configure on a card and save, the `operation_loop` function restarts, that module is require fresh uncached.
+
 ### sections / folders
 
 - **prototypes**: I sketch out ideas in code here, and implement proof-of-concept vehicles. In the beginning of development cycle this is an active folder, then less so as implementation progresses; and again more so if refactoring or feature addition is initiated.

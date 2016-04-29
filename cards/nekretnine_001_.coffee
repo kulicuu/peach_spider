@@ -40,16 +40,18 @@ price = (html, cb) ->
         src: [jQuery]
         done: (err, window)=>
             $ = window.$
-            y = _.find card.rules.item_rules, {field: 'price'}
-            c y.selector
-            z = $(y.selector).html()
-            c 'zeeee', $(z[0])
-            helpers.nekretnine_price z
+            str = $('div.advert_info_holder.fixed h3.right').html()
+            let s0 = str.substr(str.indexOf(',') + 1).trim();
+            let s1 = s0.split(' ')[0].split(',');
+            let s4 = _.reduce(s1, (acc, item, idx) => {
+                c('acc item idx', acc, item, idx)
+                acc = acc + item;
+                return acc
+            }, '');
+            return parseInt(s4);
 
 
-
-
-fields = fields_001 = {bedrooms, price}
+fields = {bedrooms, price}
 
 fields_target = [
     'id', 'currency', 'price', 'add_date', 'date', 'bathrooms', 'bedrooms', 'livingrooms',

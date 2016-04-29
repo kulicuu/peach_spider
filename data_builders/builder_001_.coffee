@@ -2,10 +2,9 @@
 
 c = -> console.log.apply console, arguments
 fs = require 'fs'
-jQuery = fs.readFileSync('../lib/jquery.min.js', 'utf-8')
-# c 'jQuery', jQuery
+path = require 'path'
+jQuery = fs.readFileSync(path.resolve(__dirname, '../lib/jquery.min.js'), 'utf-8')
 
-card = require '../crawlers/cards/cards_001/f_nekretnine.js'
 # atm i'm thinking the card idea is stupid and silly.  each site will
 # need it's own set of scrape functions one for each data point target
 # each site will get its own file.
@@ -14,19 +13,16 @@ card = require '../crawlers/cards/cards_001/f_nekretnine.js'
 
 Bluebird = require 'bluebird'
 promisify = Bluebird.promisify
-# c 'card', card
 ioredis = require 'ioredis'
 # mongodb = require 'mongodb'
 d = ioredis.createClient()
 _ = require 'lodash'
-uuid = require 'node-uuid'
+# uuid = require 'node-uuid'
 jsdom = require 'jsdom'
-
 
 require_uncached = (module) ->
     delete require.cache[require.resolve(module)]
     return require(module)
-
 
 # TODO : check if it's possible to have a require function
 # which is ENV variable dependent, so always it uses requireUncached
@@ -38,6 +34,8 @@ require2 = (module) ->
         return require(module)
     else if process.ENV is 'PROD'
         return require(module)
+# NOTE : this may be unnecessary if we just have different dev and prod main files.
+# depends if prefer env variables.
 
 scrape_href_000 = (html, next_selector, cb) ->
     jsdom.env
@@ -75,12 +73,9 @@ fetch_inside_hrefs_000 = (html, inside_selector, cb)->
                 , []
                 cb null, hrefs_rayy
 
-
 get_html_a = promisify get_html_002
 scrape_href_a = promisify scrape_href_000
 fetch_inside_hrefs_a = promisify fetch_inside_hrefs_000
-
-
 
 cursive_assemble_search_pages_000 = (arq, cb) ->
     go_recurse = arguments.callee
@@ -136,16 +131,12 @@ assemble_total_site_data_set_000 = (arq, cb)->
         struct:
             search_pages: []
             item_pages: []
-        next_selector:
-    .then (struct)->
+        next_selector: next_selector
+    .then (struct) ->
+        cb null, struct
+    .error (err) ->
+        cb err
 
 
 
-
-
-
-
-
-
-
-exports.cursive_assemble_data_set_000 = cursive_assemble_data_set_000
+module.exports = {assemble_total_site_data_set_000}
