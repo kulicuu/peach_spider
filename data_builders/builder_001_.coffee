@@ -3,6 +3,7 @@
 c = -> console.log.apply console, arguments
 fs = require 'fs'
 path = require 'path'
+request = require 'request'
 jQuery = fs.readFileSync(path.resolve(__dirname, '../lib/jquery.min.js'), 'utf-8')
 
 # atm i'm thinking the card idea is stupid and silly.  each site will
@@ -59,14 +60,16 @@ get_html_002 = (url, cb)->
                 c 'got cached'
                 cb null, re # is body
 
-fetch_inside_hrefs_000 = (html, inside_selector, cb)->
+fetch_inside_hrefs_000 = (html, item_selector, cb)->
+    c 'item_selector', item_selector
     jsdom.env
         html: html
         src: [jQuery]
         done: (err, window) =>
             if err then cb err else
                 $ = window.$
-                insides = $(inside_selector)
+                insides = $(item_selector)
+                c 'insides', insides
                 hrefs_rayy = _.reduce insides, (acc, item, idx)->
                     acc.push $(item).attr('href')
                     acc
@@ -77,65 +80,77 @@ get_html_a = promisify get_html_002
 scrape_href_a = promisify scrape_href_000
 fetch_inside_hrefs_a = promisify fetch_inside_hrefs_000
 
+assemble_item_pages_000 = (arq)->
+    {struct, item_selector, cb} = arq
+    item_pages = []
+    for item, idx in struct.search_pages
+        do (item, idx)->
+            fetch_inside_hrefs_a(item.html, item_selector)
+            .then (hrefs_rayy)->
+                for href, idx2 in hrefs_rayy
+                    do (href, idx2) ->
+                        get_html_a href
+                        .then (html)->
+                            item_pages.push
+                                url: href
+                                html: html
+                            if idx2 is (hrefs_rayy.length - 1)
+                                struct.item_pages = item_pages
+                                cb struct
+                        .error (err)->
+                            cb err
+            .error (err)->
+                cb err
+
 cursive_assemble_search_pages_000 = (arq, cb) ->
     go_recurse = arguments.callee
-    {next_href, struct, next_selector} = arq
-
+    {next_href, struct, next_selector, counter, cb} = arq
     get_html_a next_href
     .then (html)->
         struct.search_pages.push
             url: next_href
             html: html
-
-        scrape_href_a html
-        .then (href)->
+        scrape_href_a html, next_selector
+        .then (href) =>
             if (href.length > 0) and (counter < 1)
+                counter = counter + 1
                 next_arq =
                     next_href: href
                     struct: struct
                     cb: cb
                     next_selector: next_selector
+                    counter: counter
                 go_recurse next_arq
             else
                 cb null, struct
         .error (err3)->
             cb err3
 
-assemble_item_pages_000 = (arq)->
-    {struct, card, cb} = arq
-    item_pages = []
-    for item, idx in struct.search_pages
-        fetch_inside_hrefs_a item.html
-        .then (hrefs_rayy)->
-            for href, idx2 in hrefs_rayy
-                get_html_a href
-                .then (html)->
-                    item_pages.push
-                        url: href
-                        html: html
-                    if idx2 is (hrefs_rayy.length - 1)
-                        struct.item_pages = item_pages
-                        cb null, struct
-                .error (err)->
-                    cb err
-        .then (err)->
-            cb err
-
-cursive_assemble_search_pages_a = promisify cursive_assemble_search_pages_000
-assemble_item_pages_a = promisify assemble_item_pages_000
+# cursive_assemble_search_pages_a = promisify cursive_assemble_search_pages_000
+# assemble_item_pages_a = promisify assemble_item_pages_000
 
 assemble_total_site_data_set_000 = (arq, cb)->
-    {search_page_start_href, next_selector} = arq
-    cursive_assemble_search_pages_a
+    {search_page_start_href, next_selector, item_selector} = arq
+    cursive_assemble_search_pages_000
         next_href: search_page_start_href
         struct:
             search_pages: []
             item_pages: []
         next_selector: next_selector
-    .then (struct) ->
-        cb null, struct
-    .error (err) ->
-        cb err
+        counter: 0
+        cb: (err, structt) ->
+            assemble_item_pages_000
+                struct: structt
+                item_selector: item_selector
+                cb: (struct) ->
+                    cb struct
+
+
+            # cb struct
+    # .then (struct) ->
+    #     cb null, struct
+    # .error (err) ->
+    #     cb err
 
 
 

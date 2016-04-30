@@ -2,6 +2,7 @@
     "dependencies": {
         "async": "latest",
         "bluebird": "latest",
+        "chokidar": "latest",
         "ioredis": "latest",
         "jsdom": "latest",
         "lodash": "latest",

@@ -14,9 +14,10 @@ Another priority is testing coverage.  We expect sites to evolve and data to mut
 _development_
 - clone and `npm install`
 - start a Redis server.
-- `coffee dev_main_.coffee`
+- `coffee dev_main_.coffee` or better yet : `nodemon --watch dev_main_.coffee dev_main_.coffee`
 
 Now when you configure on a card and save, the `operation_loop` function restarts, that module is require fresh uncached.
+Also, I'm factoring out the `op_loop` definitions to `uncached_require`d files, so you can tweak those as well without a full process restart.  Full process restart (ideally by nodemon) only required on `dev_main_.coffee` file change, which should be necessary only rarely.
 
 ### sections / folders
 
