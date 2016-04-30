@@ -19,7 +19,7 @@ _development_
 Now when you configure on a card and save, the `operation_loop` function restarts, that module is require fresh uncached.
 Also, I'm factoring out the `op_loop` definitions to `uncached_require`d files, so you can tweak those as well without a full process restart.  Full process restart (ideally by nodemon) only required on `dev_main_.coffee` file change, which should be necessary only rarely.
 
-This brings iteration reload time to less than approximately one second.
+This brings iteration reload time to approximately one second.
 
 ### sections / folders
 
