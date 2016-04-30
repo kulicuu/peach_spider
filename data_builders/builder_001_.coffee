@@ -6,12 +6,6 @@ path = require 'path'
 request = require 'request'
 jQuery = fs.readFileSync(path.resolve(__dirname, '../lib/jquery.min.js'), 'utf-8')
 
-# atm i'm thinking the card idea is stupid and silly.  each site will
-# need it's own set of scrape functions one for each data point target
-# each site will get its own file.
-# otoh may want something with the main search url on it avail
-# for the data set build function.
-
 Bluebird = require 'bluebird'
 promisify = Bluebird.promisify
 ioredis = require 'ioredis'
