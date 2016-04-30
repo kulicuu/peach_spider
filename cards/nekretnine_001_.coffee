@@ -19,6 +19,25 @@ item_selector = 'div.resultInfo.fixed h2.marginB_5 a'
 
 # ------------ main crawler functions by field
 
+add_date = (jQuery, html, cb) ->
+    jsdom.env
+        html: html
+        src: [jQuery]
+        done: (err, window)->
+            $ = window.$
+            z = $('div.sLeftGrid.fixed li div.singleLabel')
+            # c 'z', z
+            v = null
+            for key, item of z
+                if _.isFinite(parseInt(key))
+                    w = $(item).html()
+                else
+                    w = null
+                if w is "Objavljen:"
+                    v = $(item).next().html()
+                    break
+            cb v
+
 
 bathrooms = (jQuery, html, cb) ->
     jsdom.env
@@ -94,7 +113,7 @@ price = (jQuery, html, cb) ->
 
 
 
-fields = {bedrooms, price, id, bathrooms}
+fields = {bedrooms, price, id, bathrooms, add_date}
 
 fields_target = [
     'id', 'currency', 'price', 'add_date', 'date', 'bathrooms', 'bedrooms', 'livingrooms',

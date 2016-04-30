@@ -28,6 +28,8 @@ op_loop_001 = (struct, jQuery) ->
 
     pc 'bathrooms'
 
+    pc 'add_date'
+
 
 
 

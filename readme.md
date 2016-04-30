@@ -31,4 +31,6 @@ This brings iteration reload time to approximately one second.
 
 - **common**: Functions that are used by more than one card can be factored over into files within a common folder
 
+- **operation_loops**: In order to speed up development, we want iteration time on syntax/code changes to be of minimal time.  We factor out the relevant code to an `op_loop`-- these are stored in this folder. The main loop is restarted by `chokidar` watch detecting card or op-loop changes, without restarting the node process.  This server-side hot-module reloading.  To make sure the op-loop grabs the updated modules instead of cached versions, we use a special `require_uncached` function.
+
 - **html_cursors**: Where to make scraped source html available for manual inspection from within browser, or for e2e testing.  This is important as manually navigating to site pages from within browsers can yield different source html than that acquired by npm's request module-- question of config/header variables.
