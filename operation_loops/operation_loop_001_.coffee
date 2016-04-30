@@ -7,17 +7,26 @@ require_uncached = (module) ->
     delete require.cache[require.resolve(module)]
     return require(module)
 
+
+
 op_loop_001 = (struct, jQuery) ->
     c ''
     c '-----------------------------------'
     # c 'starting op_loop_001', _.keys(struct), jQuery.length
     nk_card = require_uncached(path.resolve(__dirname, '../cards/nekretnine_001_.coffee'))
+    fields = nk_card.fields
+    html = struct.item_pages[0].html
+    pc = partial_curry_000 = (field) =>
+        fields[field] jQuery, html, (val) ->
+            c field, val
 
-    nk_card.fields.price jQuery, struct.item_pages[0].html, (price) ->
-        c 'price', price
+    pc 'price'
 
-    nk_card.fields.bedrooms jQuery, struct.item_pages[0].html, (bedrooms)->
-        c 'bedrooms', bedrooms
+    pc 'bedrooms'
+
+    pc 'id'
+
+    pc 'bathrooms'
 
 
 

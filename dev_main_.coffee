@@ -30,7 +30,7 @@ operation_loop = () ->
     {op_loop_001} = require_uncached(path.resolve('./operation_loops/operation_loop_001_.coffee'))
     # c 'jQuery', jQuery.length
     fs.writeFile path.resolve(__dirname, './html_cursors/cursor.html'), struct_glb.item_pages[0].html, (err)->
-        if err then c err else c 'good'
+        if err then c err
     op_loop_001 struct_glb, jQuery
 
     # nk_card = require_uncached(path.resolve('./cards/nekretnine_001_.coffee'))
